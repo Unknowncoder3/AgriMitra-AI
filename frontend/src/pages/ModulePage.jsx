@@ -1,0 +1,3 @@
+import {ArrowLeft,Construction,Sprout} from 'lucide-react';
+import {Link} from 'react-router-dom';
+export default function ModulePage({title,description}){return <section className="module-page"><Link to="/" className="back-link"><ArrowLeft size={15}/> Dashboard</Link><div className="module-hero-icon"><Sprout size={27}/></div><span className="eyebrow">AGRIMITRA AI MODULE</span><h1>{title}</h1><p>{description}</p><div className="module-status"><Construction size={18}/><div><strong>Module foundation planned</strong><span>This screen is a placeholder in the frontend foundation. It will be implemented with working forms, validation and API integration in its dedicated phase.</span></div></div></section>}
