@@ -1,0 +1,8 @@
+import { Bell, Menu, Search, Sun, Moon, Sprout } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+export default function Topbar({onMenuClick,theme,onToggleTheme}){
+ const [query,setQuery]=useState('');const navigate=useNavigate();
+ const submit=e=>{e.preventDefault();const q=query.toLowerCase();const routes=[['farm','/farms'],['soil','/soil'],['disease','/disease'],['crop','/crops'],['weather','/weather'],['calendar','/calendar'],['market','/marketplace'],['finance','/finance'],['assistant','/assistant']];const found=routes.find(([word])=>q.includes(word));if(found)navigate(found[1]);};
+ return <header className="topbar"><div className="topbar-left"><button className="mobile-menu" onClick={onMenuClick} aria-label="Open navigation"><Menu size={22}/></button><form className="search-box" onSubmit={submit}><Search size={17}/><input aria-label="Search modules" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search farms, crops and tools..."/><kbd>↵</kbd></form></div><div className="topbar-right"><span className="workspace-chip"><Sprout size={15}/> Farmer workspace</span><button className="icon-button" aria-label="Notifications" title="Notifications are not connected"><Bell size={19}/></button><button className="icon-button theme-toggle" onClick={onToggleTheme} aria-label="Toggle theme" title="Toggle theme">{theme==='light'?<Moon size={19}/>:<Sun size={19}/>}</button><div className="topbar-user"><div className="user-avatar">F</div><div className="user-details"><strong>Farmer</strong><small>Local prototype</small></div></div></div></header>;
+}

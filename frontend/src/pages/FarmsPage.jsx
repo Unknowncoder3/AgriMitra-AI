@@ -1,0 +1,21 @@
+import { useState } from 'react';
+import { MapPin, Plus, Sprout, LandPlot } from 'lucide-react';
+import PageHeader from '../components/common/PageHeader.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import { useAppData } from '../context/AppDataContext.jsx';
+export default function FarmsPage(){
+ const {farms,addFarm}=useAppData();const [open,setOpen]=useState(false);
+ const [form,setForm]=useState({name:'',district:'',block:'',area:'',unit:'acre',soilType:'Alluvial',irrigation:'Canal'});
+ const update=e=>setForm(f=>({...f,[e.target.name]:e.target.value}));
+ const submit=e=>{e.preventDefault();addFarm(form);setForm({name:'',district:'',block:'',area:'',unit:'acre',soilType:'Alluvial',irrigation:'Canal'});setOpen(false)};
+ return <div className="module-content"><PageHeader title="My farms" description="Create a digital profile for each farm and keep its fields and crop records organized." action={<button className="btn-primary" onClick={()=>setOpen(true)}><Plus size={17}/> Add a farm</button>}/>
+ <div className="metric-strip"><div><span>Registered farms</span><strong>{farms.length}</strong></div><div><span>Total entered area</span><strong>{farms.reduce((n,f)=>n+(Number(f.area)||0),0).toFixed(2)} <small>entered units*</small></strong></div><div><span>Farm profiles</span><strong>{farms.length?'Local records':'Not started'}</strong></div></div>
+ {open&&<div className="form-panel"><div className="panel-header"><div><span className="eyebrow">NEW FARM PROFILE</span><h3>Farm details</h3></div><button className="text-button" onClick={()=>setOpen(false)}>Close</button></div><form className="form-grid" onSubmit={submit}>
+ <label className="field full">Farm name<input required name="name" value={form.name} onChange={update} placeholder="e.g. Boro Field"/></label>
+ <label className="field">District<input required name="district" value={form.district} onChange={update} placeholder="e.g. Nadia"/></label><label className="field">Block / subdivision<input name="block" value={form.block} onChange={update} placeholder="Block name"/></label>
+ <label className="field">Land area<input required type="number" min="0.01" step="0.01" name="area" value={form.area} onChange={update}/></label><label className="field">Area unit<select name="unit" value={form.unit} onChange={update}><option value="acre">Acre</option><option value="hectare">Hectare</option><option value="bigha">Bigha (local)</option></select></label>
+ <label className="field">Soil type<select name="soilType" value={form.soilType} onChange={update}><option>Alluvial</option><option>Clay</option><option>Loamy</option><option>Sandy</option><option>Lateritic</option><option>Not sure</option></select></label><label className="field">Irrigation<select name="irrigation" value={form.irrigation} onChange={update}><option>Canal</option><option>Borewell / tube well</option><option>Rain-fed</option><option>Pond / river</option><option>Other</option></select></label>
+ <div className="form-actions full"><span className="form-hint">Saved in this browser for the frontend prototype.</span><button className="btn-primary" type="submit">Save farm</button></div></form></div>}
+ {farms.length===0?<EmptyState title="Your farm workspace starts here" description="Add your first farm to begin recording land area, soil information and crop cycles." action={<button className="btn-secondary" onClick={()=>setOpen(true)}>Create first farm</button>}/>:<div className="farm-grid">{farms.map(f=><article className="farm-card" key={f.id}><div className="farm-card-art"><div className="farm-card-icon"><LandPlot size={25}/></div><span>FARM PROFILE</span></div><div className="farm-card-body"><h3>{f.name}</h3><p><MapPin size={14}/> {f.block?f.block+', ':''}{f.district}</p><div className="farm-card-facts"><div><span>Area</span><strong>{f.area} {f.unit}</strong></div><div><span>Soil</span><strong>{f.soilType}</strong></div><div><span>Irrigation</span><strong>{f.irrigation}</strong></div></div><small className="local-tag"><Sprout size={12}/> Local prototype record</small></div></article>)}</div>}
+ <p className="footnote">*Area values are added without unit conversion. Do not compare totals across different units. Records remain local until the backend is connected.</p></div>
+}
